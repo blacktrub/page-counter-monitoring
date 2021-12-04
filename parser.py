@@ -25,7 +25,21 @@ def find_content(tree: BeautifulSoup) -> str:
     return prepare_content(content.text).split(":")[-1].split()[0]
 
 
+def find_status(tree: BeautifulSoup, column: str) -> str:
+    for element in tree.find_all("div", {"class": "row_card"}):
+        left = element.find("div", {"class": "left"}).text
+        if prepare_content(left) == column:
+            return prepare_content(element.find("div", {"class": "right"}).text)
+
+
 def get_info_by_link(link: str) -> str:
     page = get_page(link)
     tree = get_page_tree(page)
     return find_content(tree)
+
+
+def get_status_by_link(link: str, column: str) -> str:
+    page = get_page(link)
+    tree = get_page_tree(page)
+    return find_status(tree, column)
+

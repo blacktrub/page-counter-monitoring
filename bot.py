@@ -1,8 +1,8 @@
 from datetime import timedelta
-from parser import get_info_by_link
+from parser import get_info_by_link, get_status_by_link
 
 import telegram
-from env import CHAT_ID, NAME_LINK, TOKEN, HOURS
+from env import CHAT_ID, NAME_LINK, TOKEN, HOURS, STATUS_LINK, STATUS_COLUMN
 from telegram.ext import Updater
 
 
@@ -16,6 +16,12 @@ def job(context: telegram.ext.CallbackContext) -> None:
             continue
 
         content += f"{name}: {info} \n"
+
+    try:
+        status = get_status_by_link(STATUS_LINK, STATUS_COLUMN)
+        content += f"Status: {status}"
+    except Exception:
+        pass
 
     context.bot.send_message(chat_id=CHAT_ID, text=content)
 
